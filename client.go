@@ -1,14 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"encoding/binary"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"net"
-	"os"
-	"strconv"
-	"strings"
 	"sync/atomic"
 	"time"
 )
@@ -19,25 +15,48 @@ import (
 
 var (
 	sequenceId uint32
-	userId     int64
+	//userId     int64
 )
+
+var print = false
 
 // TCPClient struct
 type TCPClient struct {
 	Host string
 	Port int
+	UserId int64
+
+	conn *net.TCPConn
 }
 
-func ReadLine() (string, error) {
-	text, err := bufio.NewReader(os.Stdin).ReadString('\n')
-	if err != nil {
-		return "", err
+
+func (c *TCPClient) Login() {
+	message := &pb.LoginC2S{
+		UserId:   c.UserId,
+		Version:  "",
+		Device:   "",
+		Provider: "",
 	}
-	text = strings.TrimRight(text, "\n\r")
-	return text, nil
+	data := CreateMessage(101, message)
+	c.conn.Write(data)
 }
 
-// Start TCPClient
+func (c *TCPClient) Ping() {
+	message := &pb.PingC2S{
+		Time: uint32(time.Now().Second()),
+	}
+	data := CreateMessage(100, message)
+	c.conn.Write(data)
+}
+
+func (c *TCPClient) IntoGame() {
+	message := &pb.IntoGameC2S{
+		UserId: c.UserId,
+	}
+	data := CreateMessage(102, message)
+	c.conn.Write(data)
+}
+
 func (c *TCPClient) Start() {
 	tcpAddr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", c.Host, c.Port))
 	if err != nil {
@@ -48,6 +67,8 @@ func (c *TCPClient) Start() {
 	if err != nil {
 		panic(err)
 	}
+
+	c.conn = conn
 	go func() {
 		for {
 			time.Sleep(time.Duration(1) * time.Second)
@@ -56,48 +77,25 @@ func (c *TCPClient) Start() {
 			if err != nil {
 				panic(err)
 			}
-			fmt.Printf("received from server: [%s]\n", string(reply))
+
+			if print {
+				fmt.Printf("received from server: [%s]\n", string(reply))
+			}
 		}
 	}()
 
-	for {
-		fmt.Print(">> ")
-		text, err := ReadLine()
-		if err != nil {
-			panic("Error reading console input")
+
+	c.Login()
+
+	go func() {
+		// 10秒一次心跳
+		ticker := time.NewTicker(time.Second * 10)
+
+		for {
+			<- ticker.C
+			c.Ping()
 		}
-		command := strings.Split(text, " ")
-		switch command[0] {
-		case "LoginC2S":
-			if len(command) != 2 {
-				fmt.Printf("命令解析错误，LEN != 2\n")
-				break
-			}
-			userId, _ = strconv.ParseInt(command[1], 10, 64)
-			message := &pb.LoginC2S{
-				UserId:   userId,
-				Version:  "",
-				Device:   "",
-				Provider: "",
-			}
-			data := CreateMessage(101, message)
-			conn.Write(data)
-		case "PingC2S":
-			message := &pb.PingC2S{
-				Time: uint32(time.Now().Second()),
-			}
-			data := CreateMessage(100, message)
-			conn.Write(data)
-		case "IntoGameC2S":
-			message := &pb.IntoGameC2S{
-				UserId: userId,
-			}
-			data := CreateMessage(102, message)
-			conn.Write(data)
-		default:
-			fmt.Println("command not exist..")
-		}
-	}
+	}()
 }
 
 func CreateMessage(protocolId uint16, msg proto.Message) []byte {
