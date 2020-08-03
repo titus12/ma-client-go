@@ -22,7 +22,10 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
 // Ping 服务器的消息
 type PingC2S struct {
-	Time                 uint32   `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
+	ReqId  uint64 `protobuf:"varint,1,opt,name=req_id,json=reqId,proto3" json:"req_id,omitempty"`
+	UserId int64  `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	//	uint32 time    = 1;
+	SerList              string   `protobuf:"bytes,3,opt,name=ser_list,json=serList,proto3" json:"ser_list,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -53,15 +56,34 @@ func (m *PingC2S) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PingC2S proto.InternalMessageInfo
 
-func (m *PingC2S) GetTime() uint32 {
+func (m *PingC2S) GetReqId() uint64 {
 	if m != nil {
-		return m.Time
+		return m.ReqId
 	}
 	return 0
 }
 
+func (m *PingC2S) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *PingC2S) GetSerList() string {
+	if m != nil {
+		return m.SerList
+	}
+	return ""
+}
+
 type PingS2C struct {
-	Time                 uint32   `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
+	//	uint32 time    = 1;
+	//	int64 user_id = 2;
+	//	int32 randint = 3;
+	ReplyId              uint64   `protobuf:"varint,1,opt,name=reply_id,json=replyId,proto3" json:"reply_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SerList              string   `protobuf:"bytes,3,opt,name=ser_list,json=serList,proto3" json:"ser_list,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -92,19 +114,31 @@ func (m *PingS2C) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PingS2C proto.InternalMessageInfo
 
-func (m *PingS2C) GetTime() uint32 {
+func (m *PingS2C) GetReplyId() uint64 {
 	if m != nil {
-		return m.Time
+		return m.ReplyId
 	}
 	return 0
 }
 
+func (m *PingS2C) GetUserId() int64 {
+	if m != nil {
+		return m.UserId
+	}
+	return 0
+}
+
+func (m *PingS2C) GetSerList() string {
+	if m != nil {
+		return m.SerList
+	}
+	return ""
+}
+
 type LoginC2S struct {
-	UserId               int64    `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Version              string   `protobuf:"bytes,2,opt,name=version,proto3" json:"version,omitempty"`
-	Device               string   `protobuf:"bytes,3,opt,name=device,proto3" json:"device,omitempty"`
-	Provider             string   `protobuf:"bytes,4,opt,name=provider,proto3" json:"provider,omitempty"`
-	Token                string   `protobuf:"bytes,5,opt,name=token,proto3" json:"token,omitempty"`
+	ReqId                uint64   `protobuf:"varint,1,opt,name=req_id,json=reqId,proto3" json:"req_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SerList              string   `protobuf:"bytes,3,opt,name=ser_list,json=serList,proto3" json:"ser_list,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -135,6 +169,13 @@ func (m *LoginC2S) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_LoginC2S proto.InternalMessageInfo
 
+func (m *LoginC2S) GetReqId() uint64 {
+	if m != nil {
+		return m.ReqId
+	}
+	return 0
+}
+
 func (m *LoginC2S) GetUserId() int64 {
 	if m != nil {
 		return m.UserId
@@ -142,36 +183,17 @@ func (m *LoginC2S) GetUserId() int64 {
 	return 0
 }
 
-func (m *LoginC2S) GetVersion() string {
+func (m *LoginC2S) GetSerList() string {
 	if m != nil {
-		return m.Version
-	}
-	return ""
-}
-
-func (m *LoginC2S) GetDevice() string {
-	if m != nil {
-		return m.Device
-	}
-	return ""
-}
-
-func (m *LoginC2S) GetProvider() string {
-	if m != nil {
-		return m.Provider
-	}
-	return ""
-}
-
-func (m *LoginC2S) GetToken() string {
-	if m != nil {
-		return m.Token
+		return m.SerList
 	}
 	return ""
 }
 
 type LoginS2C struct {
-	UserId               int64    `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ReplyId              uint64   `protobuf:"varint,1,opt,name=reply_id,json=replyId,proto3" json:"reply_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SerList              string   `protobuf:"bytes,3,opt,name=ser_list,json=serList,proto3" json:"ser_list,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -202,6 +224,13 @@ func (m *LoginS2C) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_LoginS2C proto.InternalMessageInfo
 
+func (m *LoginS2C) GetReplyId() uint64 {
+	if m != nil {
+		return m.ReplyId
+	}
+	return 0
+}
+
 func (m *LoginS2C) GetUserId() int64 {
 	if m != nil {
 		return m.UserId
@@ -209,8 +238,17 @@ func (m *LoginS2C) GetUserId() int64 {
 	return 0
 }
 
+func (m *LoginS2C) GetSerList() string {
+	if m != nil {
+		return m.SerList
+	}
+	return ""
+}
+
 type IntoGameC2S struct {
-	UserId               int64    `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ReqId                uint64   `protobuf:"varint,1,opt,name=req_id,json=reqId,proto3" json:"req_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SerList              string   `protobuf:"bytes,3,opt,name=ser_list,json=serList,proto3" json:"ser_list,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -241,6 +279,13 @@ func (m *IntoGameC2S) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_IntoGameC2S proto.InternalMessageInfo
 
+func (m *IntoGameC2S) GetReqId() uint64 {
+	if m != nil {
+		return m.ReqId
+	}
+	return 0
+}
+
 func (m *IntoGameC2S) GetUserId() int64 {
 	if m != nil {
 		return m.UserId
@@ -248,8 +293,17 @@ func (m *IntoGameC2S) GetUserId() int64 {
 	return 0
 }
 
+func (m *IntoGameC2S) GetSerList() string {
+	if m != nil {
+		return m.SerList
+	}
+	return ""
+}
+
 type IntoGameS2C struct {
-	UserId               int64    `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ReplyId              uint64   `protobuf:"varint,1,opt,name=reply_id,json=replyId,proto3" json:"reply_id,omitempty"`
+	UserId               int64    `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	SerList              string   `protobuf:"bytes,3,opt,name=ser_list,json=serList,proto3" json:"ser_list,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -280,11 +334,25 @@ func (m *IntoGameS2C) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_IntoGameS2C proto.InternalMessageInfo
 
+func (m *IntoGameS2C) GetReplyId() uint64 {
+	if m != nil {
+		return m.ReplyId
+	}
+	return 0
+}
+
 func (m *IntoGameS2C) GetUserId() int64 {
 	if m != nil {
 		return m.UserId
 	}
 	return 0
+}
+
+func (m *IntoGameS2C) GetSerList() string {
+	if m != nil {
+		return m.SerList
+	}
+	return ""
 }
 
 func init() {
@@ -299,19 +367,17 @@ func init() {
 func init() { proto.RegisterFile("game.proto", fileDescriptor_38fc58335341d769) }
 
 var fileDescriptor_38fc58335341d769 = []byte{
-	// 214 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x90, 0xdf, 0x4a, 0x87, 0x30,
-	0x14, 0x80, 0x59, 0x3f, 0xff, 0x75, 0xaa, 0x9b, 0x11, 0x35, 0x84, 0x40, 0x0c, 0xc2, 0xab, 0x2e,
-	0xec, 0x11, 0xbc, 0x08, 0xa1, 0x8b, 0xd0, 0x07, 0x08, 0x73, 0x07, 0x19, 0xb1, 0x1d, 0x99, 0xcb,
-	0x57, 0xe8, 0xb5, 0xc3, 0xa9, 0xd1, 0x45, 0x79, 0xb5, 0x7d, 0xfb, 0xce, 0xc6, 0xc7, 0x00, 0x86,
-	0x4e, 0xe3, 0xe3, 0x68, 0xc9, 0x11, 0x0f, 0xfd, 0x92, 0x5e, 0xf6, 0xa4, 0x35, 0x99, 0xf5, 0x30,
-	0xbf, 0x83, 0xf8, 0x55, 0x99, 0xa1, 0x2a, 0x5b, 0xce, 0x21, 0x70, 0x4a, 0xa3, 0x60, 0x19, 0x2b,
-	0xae, 0x1a, 0xbf, 0xdf, 0x75, 0x5b, 0x56, 0x7f, 0xea, 0x2f, 0x06, 0xc9, 0x0b, 0x0d, 0xca, 0x2c,
-	0xf7, 0x6f, 0x21, 0xfe, 0x9c, 0xd0, 0xbe, 0x29, 0xe9, 0x67, 0x4e, 0x4d, 0xb4, 0x60, 0x2d, 0xb9,
-	0x80, 0x78, 0x46, 0x3b, 0x29, 0x32, 0xe2, 0x2c, 0x63, 0xc5, 0x79, 0xb3, 0x23, 0xbf, 0x81, 0x48,
-	0xe2, 0xac, 0x7a, 0x14, 0x27, 0x2f, 0x36, 0xe2, 0x29, 0x24, 0xa3, 0xa5, 0x59, 0x49, 0xb4, 0x22,
-	0xf0, 0xe6, 0x87, 0xf9, 0x35, 0x84, 0x8e, 0x3e, 0xd0, 0x88, 0xd0, 0x8b, 0x15, 0xf2, 0xfb, 0x2d,
-	0x64, 0x29, 0xfd, 0x2f, 0x24, 0x7f, 0x80, 0x8b, 0xda, 0x38, 0x7a, 0xee, 0x34, 0x1e, 0x05, 0xff,
-	0x9e, 0x3b, 0x7a, 0xef, 0x3d, 0xf2, 0x7f, 0xf8, 0xf4, 0x1d, 0x00, 0x00, 0xff, 0xff, 0x0c, 0x06,
-	0x33, 0x10, 0x66, 0x01, 0x00, 0x00,
+	// 182 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4a, 0x4f, 0xcc, 0x4d,
+	0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x53, 0x4a, 0x21, 0x5c, 0xec, 0x01, 0x99,
+	0x79, 0xe9, 0xce, 0x46, 0xc1, 0x42, 0xa2, 0x5c, 0x6c, 0x45, 0xa9, 0x85, 0xf1, 0x99, 0x29, 0x12,
+	0x8c, 0x0a, 0x8c, 0x1a, 0x2c, 0x41, 0xac, 0x45, 0xa9, 0x85, 0x9e, 0x29, 0x42, 0xe2, 0x5c, 0xec,
+	0xa5, 0xc5, 0xa9, 0x45, 0x20, 0x71, 0x26, 0x05, 0x46, 0x0d, 0xe6, 0x20, 0x36, 0x10, 0xd7, 0x33,
+	0x45, 0x48, 0x92, 0x8b, 0x03, 0x24, 0x9e, 0x93, 0x59, 0x5c, 0x22, 0xc1, 0xac, 0xc0, 0xa8, 0xc1,
+	0x19, 0xc4, 0x5e, 0x9c, 0x5a, 0xe4, 0x93, 0x59, 0x5c, 0xa2, 0x14, 0x01, 0x31, 0x35, 0xd8, 0xc8,
+	0x19, 0xa4, 0xaa, 0x28, 0xb5, 0x20, 0xa7, 0x12, 0x61, 0x2e, 0x3b, 0x98, 0x4f, 0xa6, 0xc9, 0xa1,
+	0x5c, 0x1c, 0x3e, 0xf9, 0xe9, 0x99, 0x79, 0x54, 0x76, 0x70, 0x24, 0xd4, 0x58, 0x1a, 0xb8, 0x38,
+	0x82, 0x8b, 0xdb, 0x33, 0xaf, 0x24, 0xdf, 0x3d, 0x31, 0x37, 0x95, 0xca, 0x8e, 0x8e, 0x41, 0x98,
+	0x4c, 0x7d, 0x77, 0x27, 0xb1, 0x81, 0x13, 0x88, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0x6f, 0x37,
+	0xfb, 0xb0, 0x35, 0x02, 0x00, 0x00,
 }
