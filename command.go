@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"github.com/titus12/ma-commons-go/control"
+	control2 "github.com/titus12/ma-commons-go/control/proto"
 	"strconv"
 	"strings"
 	"sync"
@@ -37,6 +40,65 @@ func delUser(id int64) {
 
 	delete(userMap, id)
 }
+
+
+// 列出指定服务的所有节点
+func ListNodeCommand(msgstr interface{}) {
+	str, ok := msgstr.(string)
+	if !ok {
+		fmt.Println("不能正常转换成 string 消息")
+		return
+	}
+	strarr := strings.Split(str, " ")
+
+	serviceName := strarr[0]
+
+	nodes := control.GetAllNodeData(serviceName)
+
+	for _, n := range nodes {
+		fmt.Println(n)
+	}
+}
+
+
+func StopNodeCommand(msgstr interface{}) {
+	str, ok := msgstr.(string)
+	if !ok {
+		fmt.Println("不能正常转换成 string 消息")
+		return
+	}
+	strarr := strings.Split(str, " ")
+
+	serviceName := strarr[0]
+	id := strarr[1]
+
+	nodeKey := fmt.Sprintf("%s%s", serviceName, id)
+
+	nodes := control.GetAllNodeData(serviceName)
+
+	var hitNode *control.NodeInfo
+	for idx , n := range nodes {
+		if n.Key == nodeKey {
+			hitNode = nodes[idx]
+			break
+		}
+	}
+
+	if hitNode == nil {
+		fmt.Println("没有找到合适的节点，节点不存在....")
+		return
+	}
+
+	// 执行远程调用
+	control.ExecGrpcCall(hitNode, func(ctx context.Context, cli control2.ControlServiceClient) error {
+		_, err := cli.StopNode(ctx, &control2.Request{
+			NodeKey:              hitNode.Key,
+			Addr:                 hitNode.Addr,
+		})
+		return err
+	})
+}
+
 
 
 func StartCommand(msgstr interface{}) {
